@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.function.LongSupplier;
 
 public class P02_ExcelFunctions
@@ -53,19 +54,31 @@ public class P02_ExcelFunctions
 		{
 			if (command[1].equals(header[i]))
 			{
-				String sortBy = header[i];
+
+				TreeMap<String, String[]> sortedStudentsMap = new TreeMap<>();
+				for (String[] student : input)
+				{
+					sortedStudentsMap.put(student[i], student);
+				}
+				sortedStudentsMap.forEach((key, value) ->
+				{
+					printLine(value);
+				});
 			}
 		}
 	}
 
 	private static void hideColumnAndPrint()
 	{
-		printLine(header);
-		for (String[] student : input)
+		for (int i = 0; i < header.length; i++)
 		{
-			if (!student[0].equals(command[1]))
+			if (header[i].equals(command[1]))
 			{
-				printLine(student);
+				printLine(header, i);
+				for (String[] student : input)
+				{
+					printLine(student, i);
+				}
 			}
 		}
 	}
@@ -106,6 +119,24 @@ public class P02_ExcelFunctions
 			sBuilder.append(line[i] + " | ");
 		}
 		sBuilder.append(line[line.length - 1]);
+		System.out.println(sBuilder.toString());
+	}
+
+	private static void printLine(String[] line, int hiddenColumn)
+	{
+		StringBuilder sBuilder = new StringBuilder();
+		for (int i = 0; i < line.length - 1; i++)
+		{
+			if (i != hiddenColumn)
+			{
+				sBuilder.append(line[i] + " | ");
+			}
+		}
+		sBuilder.append(line[line.length - 1]);
+		if (sBuilder.toString().endsWith(" | "))
+		{
+			sBuilder.toString().substring(0, sBuilder.toString().length() - 2);
+		}
 		System.out.println(sBuilder.toString());
 	}
 }
